@@ -1,5 +1,6 @@
 import { FC, useState, useCallback } from 'react';
 import styled from 'styled-components';
+import Button from '../styles/Button';
 import mixins from '../styles/mixins';
 
 interface CorrectionRowProps {
@@ -49,9 +50,9 @@ const CorrectionRow: FC<CorrectionRowProps> = ({ originalText, updateValue, edit
     <RowMain>
       { removeable && !remove && input === originalText && !showInput && <TrashCan onClick={ handleRemoveToggle } className='material-symbols-outlined'>delete</TrashCan> }
       { (remove || input !== originalText) && !showInput && <TrashCan onClick={ handleRevert } className='material-symbols-outlined'>undo</TrashCan> }
-      <Button onClick={ handleClickStart } $disabled={ editingAny }>
+      <CorrectionButton $notOrange onClick={ handleClickStart } $disabled={ editingAny } $removed={ remove } $corrected={ input !== originalText && !showInput }>
         <h2>{ originalText }</h2>
-      </Button>
+      </CorrectionButton>
       { (showInput || input !== originalText || remove) && <Icon className='material-symbols-outlined'>arrow_forward</Icon> }
         { showInput &&
           <Input type='text' value={ input } placeholder='enter a new name' onChange={ event => setInput(event.currentTarget.value) } />
@@ -68,27 +69,23 @@ const RowMain = styled.div`
   align-items: center;
 
   h2 {
-    color: white;
     margin: 0;
     ${ mixins.textShadow }
   }
 `;
 
 interface ButtonStyleProps {
-  $disabled: boolean;
+  $removed: boolean;
+  $corrected: boolean;
 }
 
-const Button = styled.div<ButtonStyleProps>`
-  background-color: orange;
+const CorrectionButton = styled(Button)<ButtonStyleProps>`
   margin: 4px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  ${ props => !props.$disabled && 'cursor: pointer;' }
-  ${ props => props.$disabled && 'opacity: 0.5;' }
+  ${ props => props.$removed && `background-color: ${ props.theme.colors.lightRed };` }
+  ${ props => props.$corrected && `background-color: ${ props.theme.colors.lightGreen };` }
 `;
 
 const Icon = styled.span`
-  color: white;
   margin: 0px 10px;
   font-size: 2rem;
 `;
@@ -105,7 +102,7 @@ const CheckMark = styled(Icon)`
 
 const RedTrash = styled(Icon)`
   color: ${ props => props.theme.colors.lightRed };
-  font-size: 3rem;
+  font-size: 2.5rem;
 `;
 
 const Input = styled.input`

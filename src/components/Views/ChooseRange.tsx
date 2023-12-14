@@ -2,9 +2,11 @@ import { FC, useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import GridColumn from '../../models/grid-column';
 import RangeSelectColumn from '../RangeSelectColumn';
+import Button from '../../styles/Button';
 import mixins from '../../styles/mixins';
 import View from '../../models/view';
 import example from '../../images/picker-example.png';
+import Divider from '../../styles/Divider';
 
 interface ChooseRangeProps {
   parsedSheet: GridColumn[];
@@ -76,24 +78,26 @@ const ChooseRange: FC<ChooseRangeProps> = ({ parsedSheet, selectedSheet, setSele
     <ViewMain>
       <h1>Casting</h1>
       <h3>Select only the casting itself by clicking on the upper left and lower right corners.</h3>
-      <Instructions>
-        { !upperLeft && !selectedSheet && <h2>Choose the upper left tile</h2> }
-        { upperLeft && !selectedSheet && <h2>Choose the lower right tile</h2> }
-        {  !selectedSheet && <Button $orange onClick={ () => setShowExample(!showExample) }>
-        <h2>{ showExample ? 'OK' : 'Help' }</h2>
-        </Button> }
-      </Instructions>
-      { selectedSheet && <Divider /> }
+      <Divider />
+      { !selectedSheet &&
+        <Instructions>
+          { !upperLeft && <h2>Choose the upper left tile</h2> }
+          { upperLeft && <h2>Choose the lower right tile</h2> }
+          <Button onClick={ () => setShowExample(!showExample) }>
+            <h2>{ showExample ? 'OK' : 'Help' }</h2>
+          </Button>
+        </Instructions>
+      }
       {
         selectedSheet && 
         <InstructionsColumn>
           <h2>Does this look okay?</h2>
           <h3>{ '(the top row should be instrument names, bottom row last song)' }</h3>
           <div>
-            <Button $orange onClick={ () => setView('Instrument Columns') }>
-              <h2>Yep</h2>
+            <Button onClick={ () => setView('Instrument Columns') }>
+              <h2>Yes</h2>
             </Button>
-            <Button onClick={ handleReset }>
+            <Button $notOrange onClick={ handleReset }>
               <h2>No, start over</h2>
             </Button>
           </div>
@@ -130,17 +134,11 @@ const ViewMain = styled.div`
   margin: 10px 0px;
 
   > h1, h2, h3 {
-    color: white;
-    ${ mixins.textShadowLight }
     margin: 0;
   }
 
   h3 {
     font-style: italic;
-  }
-
-  > h2 {
-    margin-top: 10px;
   }
 `;
 
@@ -148,7 +146,6 @@ const Instructions = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 0px;
-  max-width: max-content;
 
   span {
     color: ${ props => props.theme.colors.lightGreen };
@@ -164,6 +161,10 @@ const Instructions = styled.div`
 const InstructionsColumn = styled(Instructions)`
   flex-direction: column;
   align-items: start;
+
+  ${ Button } {
+    margin-top: 10px;
+  }
 `;
 
 const GridContainer = styled.div`
@@ -171,39 +172,9 @@ const GridContainer = styled.div`
   position: relative;
 `;
 
-interface ButtonStyle {
-  $orange?: boolean;
-}
-
-const Divider = styled.div`
-  height: 1px;
-  background-color: white;
-  width: 100%;
-`;
-
-const Button = styled.div<ButtonStyle>`
-  display: flex;
-  background-color: ${ props => props.$orange ? 'orange' : props.theme.colors.bgInner1 };
-  padding: 6px 10px;
-  margin: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  min-width: 60px;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-
-  > h2 {
-    margin: 0;
-    color: white;
-    ${ mixins.textShadow };
-  }
-`;
-
 const Error = styled.div`
   background-color: ${ props => props.theme.colors.lightRed };
-  box-shadow: 1px 1px 10px 4px rgba(0, 0, 0, 0.5);
+  ${ mixins.boxShadow }
   padding: 4px 12px;
   border-radius: 8px;
   position: absolute;
@@ -211,7 +182,6 @@ const Error = styled.div`
   left: 200px;
 
   > h1 {
-    color: white;
     ${ mixins.textShadowLight }
     font-size: 3rem;
   }
@@ -229,7 +199,7 @@ const Example = styled.div`
   border: orange 1px solid;
   border-radius: 10px;
   background-color: #303030;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  ${ mixins.boxShadow }
   cursor: pointer;
   
   &:hover {

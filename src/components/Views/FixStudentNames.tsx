@@ -3,6 +3,11 @@ import styled from 'styled-components';
 import CorrectionRow from '../CorrectionRow';
 import mixins from '../../styles/mixins';
 import Correction from '../../models/correction';
+import Button from '../../styles/Button';
+import Divider from '../../styles/Divider';
+import students1 from '../../images/students1.png';
+import students2 from '../../images/students2.png';
+import students3 from '../../images/students3.png';
 
 interface FixStudentNamesProps {
   studentNames: string[];
@@ -12,6 +17,7 @@ interface FixStudentNamesProps {
 const FixStudentNames: FC<FixStudentNamesProps> = ({ studentNames, next }) => {
   const [corrections, setCorrections] = useState<Correction[]>(studentNames.map(x => ({ original: x, updated: '' })));
   const [editingAny, setEditingAny] = useState(false);
+  const [showExample, setShowExample] = useState(false);
 
   const updateInput = useCallback((value: string, index: number, remove?: boolean) => {
     setCorrections(oldState => {
@@ -26,28 +32,38 @@ const FixStudentNames: FC<FixStudentNamesProps> = ({ studentNames, next }) => {
   return (
     <ViewMain>
       <h1>Student Names</h1>
+      <Divider />
       <p>
-        Here you can:<br/>
-        - Fix typos in names<br />
-        - Trim off director's notes about a part e.g. { '"(Ac)"' } or { '"Piano."' }<br />
-        - Remove unwanted notes/placeholders, like "shaker" { '(or leave them if names can be added later.)' }
-        <br />
-        <br />
+        Scan for typos and notes leftover from the director that you'd like to remove.<br />
         Click an entry to edit it, or click the trash to add it to the remove list.
         <br />
         <br />
-        Names only appear more than once when there are differences.<br />
-        Just make sure that they appear the way you want for each case below.
-        <br />
-        <br />
-        Don't forget that you can also make any of these edits manually later.
+        You could also skip this step and make any edits manually later in the resulting text file.
       </p>
+      <HelpButton onClick={ () => setShowExample(!showExample) }>
+        <h2>
+          { showExample ? 'Okay' : 'How does this work?' }
+        </h2>
+      </HelpButton>
       <Buttons>{ studentNames.sort().map((x, i) =>
         <CorrectionRow key={ x } removeable originalText={ x } updateValue={ (value: string, remove?: boolean) => updateInput(value, i, remove) } editingAny={ editingAny } setEditingAny={ setEditingAny } />) }
       </Buttons>
-      <NextButton $disabled={ editingAny } onClick={ () => next(corrections.filter(x => x.updated.length || x.remove)) }>
+      <Divider />
+      <Button $nextStyle $disabled={ editingAny } onClick={ () => next(corrections.filter(x => x.updated.length || x.remove)) }>
         <h1>Next</h1>
-      </NextButton>
+      </Button>
+      { showExample &&
+      <Example onClick={ () => setShowExample(false) }>
+        <h2>Let's say the director wrote a student's name two different ways.<br/>It'll show up once for every way they wrote it:</h2>
+        <img src={ students1 } alt="" />
+        <h2>If you were to make the following edit below, "Jonathan Shredman" would be changed to "Jon Shredman" for <i>every time</i> that it was written that way:</h2>
+        <img src={ students2 } alt="" />
+        <h2>Just make sure the names are written the way you want for each time they appear below.</h2>
+        <br/>
+        <br />
+        <h2>You might also want to remove notes or placeholders that were never filled in with a name:</h2>
+        <img src={ students3 } alt="" />
+      </Example> }
     </ViewMain>
   )
 }
@@ -56,9 +72,9 @@ const ViewMain = styled.div`
   display: flex;
   flex-direction: column;
   margin: 20px;
+  position: relative;
 
   h1, p {
-    color: white;
     margin: 0;
     ${ mixins.textShadow }
   }
@@ -74,26 +90,52 @@ const ViewMain = styled.div`
   }
 `;
 
+const HelpButton = styled(Button)`
+  max-width: max-content;
+  margin-top: 10px;
+`;
+
 const Buttons = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 30px;
 `;
 
-interface NextButtonProps {
-  $disabled: boolean;
-}
-
-const NextButton = styled.div<NextButtonProps>`
+const Example = styled.div`
+  position: fixed;
   display: flex;
-  background-color: orange;
-  padding: 4px 20px;
-  border: none;
-  border-radius: 8px;
-  margin: 20px 0px;
-  max-width: max-content;
-  ${ props => !props.$disabled && 'cursor: pointer;' }
-  ${ props => props.$disabled && 'opacity: 0.5;' }
+  flex-direction: column;
+  align-items: center;
+  min-width: min-content;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: orange 1px solid;
+  border-radius: 10px;
+  background-color: ${ props => props.theme.colors.bgInner1 };
+  ${ mixins.boxShadow }
+  cursor: pointer;
+  overflow: hidden;
+  padding: 20px 0px;
+  
+  &:hover {
+    filter: brightness(0.8);
+  }
+
+  > h2 {
+    text-align: center;
+    min-width: 10%;
+    margin: 0 50px;
+    ${ mixins.textShadowLight }
+  }
+
+  > img {
+    object-fit: contain;
+    width: auto;
+    margin: 10px 0px 30px;
+    border-radius: 10px;
+    ${ mixins.boxShadowLight }
+  }
 `;
 
 export default FixStudentNames;

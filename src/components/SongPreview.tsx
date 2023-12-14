@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 import SongPreviewData from '../models/song-preview';
+import mixins from '../styles/mixins';
 
 interface SongPreviewProps {
   song: SongPreviewData;
@@ -19,8 +20,8 @@ const PreviewMain = styled.div`
   margin: 10px 0px;
 
   > h2 {
-    color: white;
     margin: 0;
+    ${ mixins.textShadowLight }
 
     &:first-of-type {
       text-decoration: underline;

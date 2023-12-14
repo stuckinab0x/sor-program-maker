@@ -3,13 +3,15 @@ import styled from 'styled-components';
 import CorrectionRow from '../CorrectionRow';
 import mixins from '../../styles/mixins';
 import Correction from '../../models/correction';
+import Button from '../../styles/Button';
+import Divider from '../../styles/Divider';
 
-interface FixInstrumentColumnsProps {
+interface FixInstrumentNamesProps {
   instrumentNames: string[];
   next: (corrections: Correction[]) => void;
 }
 
-const FixInstrumentColumns: FC<FixInstrumentColumnsProps> = ({ instrumentNames, next }) => {
+const FixInstrumentNames: FC<FixInstrumentNamesProps> = ({ instrumentNames, next }) => {
   const [corrections, setCorrections] = useState<Correction[]>(instrumentNames.map(x => ({ original: x, updated: '' })));
   const [editingAny, setEditingAny] = useState(false);
 
@@ -24,6 +26,7 @@ const FixInstrumentColumns: FC<FixInstrumentColumnsProps> = ({ instrumentNames, 
   return (
     <ViewMain>
       <h1>Instrument Names</h1>
+      <Divider />
       <h3>
         Click an instrument to change how it's written,
         <br />
@@ -32,20 +35,16 @@ const FixInstrumentColumns: FC<FixInstrumentColumnsProps> = ({ instrumentNames, 
       <Buttons>{ instrumentNames.map((x, i) =>
         <CorrectionRow key={ x } originalText={ x } updateValue={ (value: string) => updateInput(value, i) } editingAny={ editingAny } setEditingAny={ setEditingAny } />) }
       </Buttons>
-      <NextButton $disabled={ editingAny } onClick={ () => next(corrections.filter(x => x.updated.length)) }>
+      <Divider />
+      <Button $nextStyle $disabled={ editingAny } onClick={ () => next(corrections.filter(x => x.updated.length)) }>
         <h1>Next</h1>
-      </NextButton>
+      </Button>
     </ViewMain>
   )
 }
 
 const ViewMain = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 20px;
-
   h1, h3 {
-    color: white;
     margin: 0;
     ${ mixins.textShadow }
   }
@@ -61,21 +60,4 @@ const Buttons = styled.div`
   margin-top: 30px;
 `;
 
-interface NextButtonProps {
-  $disabled: boolean;
-}
-
-const NextButton = styled.div<NextButtonProps>`
-  display: flex;
-  background-color: orange;
-  padding: 4px 20px;
-  border: none;
-  border-radius: 8px;
-  margin: 20px 0px;
-  max-width: max-content;
-  ${ props => !props.$disabled && 'cursor: pointer;' }
-  ${ props => props.$disabled && 'opacity: 0.5;' }
-  box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.3);
-`;
-
-export default FixInstrumentColumns;
+export default FixInstrumentNames;

@@ -44,14 +44,13 @@ const TileMain = styled.div<TileProps>`
   position: relative;
   z-index: 50;
   cursor: grab;
-  box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.3);
+  ${ mixins.boxShadow }
 
   &:active {
     cursor: grabbing;
   }
 
   >  h1 {
-    color: white;
     margin: 0;
     ${ mixins.textShadow }
     pointer-events: none;
@@ -60,17 +59,8 @@ const TileMain = styled.div<TileProps>`
 
   &::after {
     opacity: ${ props => props.$validDrop ? '1' : '0' };
-    content: '';
-    position: absolute;
-    left: -20px;
-    top: 36px;
-    border: solid 5px transparent;
+    ${ mixins.dragDropArrow }
     border-left-color: ${ props => props.$dragOver ? 'orange' : props.theme.colors.bgInner1 };
-    border-top-width: 14px;
-    border-bottom-width: 14px;
-    border-right-width: 8px;
-    border-left-width: 16px;
-    pointer-events: none;
   }
 `;
 

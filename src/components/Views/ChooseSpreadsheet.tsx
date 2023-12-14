@@ -78,12 +78,10 @@ const ViewMain = styled.div`
   margin: 20px;
 
   > h1 {
-    color: white;
     margin: 0;
   }
 
   input {
-    color: white;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
     padding: 10px;
     background-color: ${ props => props.theme.colors.bgInner1 };

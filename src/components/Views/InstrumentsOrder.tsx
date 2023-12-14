@@ -4,6 +4,8 @@ import mixins from '../../styles/mixins';
 import Correction from '../../models/correction';
 import OrderCorrection from '../../models/order-correction';
 import DragTile from '../DragTile';
+import Button from '../../styles/Button';
+import Divider from '../../styles/Divider';
 
 interface InstrumentOrderProps {
   originalNames: string[];
@@ -41,6 +43,7 @@ const InstrumentOrder: FC<InstrumentOrderProps> = ({ originalNames, instrumentNa
   return (
     <ViewMain>
       <h1>Instrument Order</h1>
+      <Divider />
       <h3>Click and drag to adjust the order the casting will be shown in</h3>
       <Tiles>
         <TopDrop
@@ -55,9 +58,10 @@ const InstrumentOrder: FC<InstrumentOrderProps> = ({ originalNames, instrumentNa
             <DragTile key={ x.name } currentDragging={ currentDragging } handleDrop={ handleDrop } setAsCurrent={ () => setCurrentDragging(x) } clearCurrent={ () => setCurrentDragging(null) } correctionInfo={ x } />
           )}
       </Tiles>
-      <NextButton onClick={ () => next(order) }>
+      <Divider />
+      <Button $nextStyle onClick={ () => next(order) }>
         <h1>Next</h1>
-      </NextButton>
+      </Button>
     </ViewMain>
   )
 }
@@ -68,7 +72,6 @@ const ViewMain = styled.div`
   margin: 20px;
 
   h1, h3 {
-    color: white;
     margin: 0;
     ${ mixins.textShadow }
   }
@@ -96,17 +99,8 @@ const TopDrop = styled.div<TopDropProps>`
 
   &::after {
     opacity: ${ props => props.$validDrop ? '1' : '0' };
-    content: '';
-    position: absolute;
-    left: -20px;
-    top: 36px;
-    border: solid 5px transparent;
+    ${ mixins.dragDropArrow }
     border-left-color: ${ props => props.$dragOver ? 'orange' : props.theme.colors.bgInner1 };
-    border-top-width: 14px;
-    border-bottom-width: 14px;
-    border-right-width: 8px;
-    border-left-width: 16px;
-    pointer-events: none;
   }
 `
 
@@ -117,18 +111,5 @@ const Tiles = styled.div`
   align-self: center;
   position: relative;
 `;
-
-const NextButton = styled.div`
-  display: flex;
-  background-color: orange;
-  padding: 4px 20px;
-  border: none;
-  border-radius: 8px;
-  margin: 20px 0px;
-  max-width: max-content;
-  cursor: pointer;
-  box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.3);
-`;
-
 
 export default InstrumentOrder;

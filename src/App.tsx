@@ -6,7 +6,7 @@ import View from './models/view';
 import ChooseSpreadsheet from './components/Views/ChooseSpreadsheet';
 import theme from './styles/theme';
 import ChooseRange from './components/Views/ChooseRange';
-import FixInstrumentColumns from './components/Views/FixInstrumentColumns';
+import FixInstrumentNames from './components/Views/FixInstrumentNames';
 import FixStudentNames from './components/Views/FixStudentNames';
 import Correction from './models/correction';
 import SongPreviewData from './models/song-preview';
@@ -17,6 +17,7 @@ import OrderCorrection from './models/order-correction';
 
 const GlobalStyle = createGlobalStyle`
   html, body {
+    color: white;
     background-color: ${ props => props.theme.colors.bgMain };
     margin: 0;
     display: flex;
@@ -147,7 +148,7 @@ const App: FC = () => {
             />
           }
           { view === 'Instrument Columns' && selectedSheet &&
-            <FixInstrumentColumns
+            <FixInstrumentNames
               instrumentNames={ selectedSheet.slice(1).map(x => String(x.cells[0].value) || '') }
               next={ (corrections: Correction[]) => { setCorrectedInstruments(corrections); setView('Instruments Order') } } 
             /> }

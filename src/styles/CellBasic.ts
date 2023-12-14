@@ -13,10 +13,6 @@ const CellBasic = styled.div`
   border-radius: 4px;
   box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0.2);
   user-select: none;
-
-  > p {
-    color: white;
-  }
-`
+`;
 
 export default CellBasic;
