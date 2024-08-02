@@ -54,14 +54,14 @@ const FixStudentNames: FC<FixStudentNamesProps> = ({ studentNames, next }) => {
       </Button>
       { showExample &&
       <Example onClick={ () => setShowExample(false) }>
-        <h2>Let's say the director wrote a student's name two different ways.<br/>It'll show up once for every way they wrote it:</h2>
+        <h3>Let's say the director wrote a student's name two different ways.<br/>It'll show up once for every way they wrote it:</h3>
         <img src={ students1 } alt="" />
-        <h2>If you were to make the following edit below, "Jonathan Shredman" would be changed to "Jon Shredman" for <i>every time</i> that it was written that way:</h2>
+        <h3>If you were to make the following edit below, "Jonathan Shredman" would be changed to "Jon Shredman" for <i>every time</i> that it was written that way:</h3>
         <img src={ students2 } alt="" />
-        <h2>Just make sure the names are written the way you want for each time they appear below.</h2>
+        <h3>Just make sure the names are written the way you want for each time they appear below.</h3>
         <br/>
         <br />
-        <h2>You might also want to remove notes or placeholders that were never filled in with a name:</h2>
+        <h3>You might also want to remove notes or placeholders that were never filled in with a name:</h3>
         <img src={ students3 } alt="" />
       </Example> }
     </ViewMain>
@@ -122,7 +122,7 @@ const Example = styled.div`
     filter: brightness(0.8);
   }
 
-  > h2 {
+  > h3 {
     text-align: center;
     min-width: 10%;
     margin: 0 50px;

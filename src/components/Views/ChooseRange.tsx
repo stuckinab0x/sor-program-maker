@@ -119,7 +119,7 @@ const ChooseRange: FC<ChooseRangeProps> = ({ parsedSheet, selectedSheet, setSele
           <Example onClick={ () => setShowExample(false) }>
             <h2>Pick the tile at the corner between instruments<br />/songs...</h2>
             <img src={ example } alt="" />
-            <h2>then pick the last tile of the last song</h2>
+            <h2>then pick the last column &#40;even if it's empty&#41; of the last song</h2>
           </Example>
         }
       </GridContainer>

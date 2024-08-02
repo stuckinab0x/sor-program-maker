@@ -1,4 +1,4 @@
-import { FC, useState, useCallback } from 'react';
+import { FC, useState, useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Button from '../styles/Button';
 import mixins from '../styles/mixins';
@@ -15,6 +15,8 @@ const CorrectionRow: FC<CorrectionRowProps> = ({ originalText, updateValue, edit
   const [input, setInput] = useState(originalText);
   const [showInput, setShowInput] = useState(false);
   const [remove, setRemove] = useState(false);
+
+  const textInput = useRef<HTMLInputElement>(null);
 
   const handleConfirm = useCallback(() => {
     if (!remove && input === '') {
@@ -44,7 +46,25 @@ const CorrectionRow: FC<CorrectionRowProps> = ({ originalText, updateValue, edit
       return;
     setShowInput(true);
     setEditingAny(true);
+
   }, [editingAny, setEditingAny]);
+
+  useEffect(() => {
+    const callback = (event: KeyboardEvent) => {
+      if (event.key === 'Enter' && showInput)
+        handleConfirm();
+    };
+
+    document.addEventListener('keydown', callback);
+
+    return () => document.removeEventListener('keydown', callback);
+  }, [handleConfirm, showInput]);
+
+  useEffect(() => {
+    if (showInput && textInput.current)
+      textInput.current.focus();
+  }, [showInput, textInput])
+
 
   return (
     <RowMain>
@@ -55,7 +75,7 @@ const CorrectionRow: FC<CorrectionRowProps> = ({ originalText, updateValue, edit
       </CorrectionButton>
       { (showInput || input !== originalText || remove) && <Icon className='material-symbols-outlined'>arrow_forward</Icon> }
         { showInput &&
-          <Input type='text' value={ input } placeholder='enter a new name' onChange={ event => setInput(event.currentTarget.value) } />
+          <Input ref={ textInput } type='text' value={ input } placeholder='enter a new name' onChange={ event => setInput(event.currentTarget.value) } />
         }
         { showInput && <CheckMark className='material-symbols-outlined' onClick={ handleConfirm }>done</CheckMark> }
         { !showInput && input !== originalText && !remove && <h2>{ input }</h2> }
