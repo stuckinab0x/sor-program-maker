@@ -20,6 +20,7 @@ const CorrectionRow: FC<CorrectionRowProps> = ({ originalText, updateValue, edit
 
   const handleConfirm = useCallback(() => {
     if (!remove && input === '') {
+      updateValue('');
       setInput(originalText);
       setShowInput(false);
       setEditingAny(false);

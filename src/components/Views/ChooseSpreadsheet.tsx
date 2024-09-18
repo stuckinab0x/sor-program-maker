@@ -90,12 +90,14 @@ const ChooseSpreadsheet: FC<ChooseSpreadSheetProps> = ({ setFileName, setParsedS
         onChange={ event => handleInputChange(event) }
       />
       <LoadIcons className='material-symbols-outlined'>done</LoadIcons>
-      { sheetOptions.length > 0 && (<>
+      { !!files && files.length > 0 && sheetOptions.length > 0 && (<>
         <h1>
-          Which sheet has your casting?
+          The file has more than one sheet.
+          <br />
+          Which one do you want to use?
         </h1>
         <SheetsList>
-          {sheetOptions.map(x => <li key={x} onClick={ () => { setSelectedSheet(x); setError(false) } }>{x}</li>)}
+          { sheetOptions.map(x => <li key={x} onClick={ () => { setSelectedSheet(x); setError(false) } }>{x}</li>) }
         </SheetsList>
       </>) }
       { error && <h1>Whoops, something broke :&#40;<br />Try another file or sheet</h1> }

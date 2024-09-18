@@ -39,6 +39,8 @@ const FixStudentNames: FC<FixStudentNamesProps> = ({ studentNames, next }) => {
         <br />
         <br />
         You could also skip this step and make any edits manually later in the resulting text file.
+        <br/>
+        Leaving two names in one casting is fine, assuming they're written the way you want.
       </p>
       <HelpButton onClick={ () => setShowExample(!showExample) }>
         <h2>

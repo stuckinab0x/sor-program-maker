@@ -81,10 +81,10 @@ const ChooseRange: FC<ChooseRangeProps> = ({ parsedSheet, selectedSheet, setSele
       <Divider />
       { !selectedSheet &&
         <Instructions>
-          { !upperLeft && <h2>Choose the upper left tile</h2> }
-          { upperLeft && <h2>Choose the lower right tile</h2> }
+          { !upperLeft && <h2>Click the cell immediately above the song names.</h2> }
+          { upperLeft && <h2>Click the cell under the last instrument column on the last song row.</h2> }
           <Button onClick={ () => setShowExample(!showExample) }>
-            <h2>{ showExample ? 'OK' : 'Help' }</h2>
+            <h2>{ showExample ? 'Hide Help' : 'Help' }</h2>
           </Button>
         </Instructions>
       }
@@ -117,9 +117,9 @@ const ChooseRange: FC<ChooseRangeProps> = ({ parsedSheet, selectedSheet, setSele
         }
         { showExample &&
           <Example onClick={ () => setShowExample(false) }>
-            <h2>Pick the tile at the corner between instruments<br />/songs...</h2>
+            <h2>Pick the cell at the corner between instruments<br />/songs...</h2>
             <img src={ example } alt="" />
-            <h2>then pick the last column &#40;even if it's empty&#41; of the last song</h2>
+            <h2>then pick the last instrument column in the last song &#40;even if it's blank&#41;</h2>
           </Example>
         }
       </GridContainer>
