@@ -5,15 +5,17 @@ import mixins from '../../styles/mixins';
 import Correction from '../../models/correction';
 import Button from '../../styles/Button';
 import Divider from '../../styles/Divider';
+import { useMaker } from '../../contexts/maker-context';
 
 interface FixInstrumentNamesProps {
   instrumentNames: string[];
-  next: (corrections: Correction[]) => void;
 }
 
-const FixInstrumentNames: FC<FixInstrumentNamesProps> = ({ instrumentNames, next }) => {
+const FixInstrumentNames: FC<FixInstrumentNamesProps> = ({ instrumentNames }) => {
   const [corrections, setCorrections] = useState<Correction[]>(instrumentNames.map(x => ({ original: x, updated: '' })));
   const [editingAny, setEditingAny] = useState(false);
+
+  const { setCorrectedInstruments, setView } = useMaker();
 
   const updateInput = useCallback((value: string, index: number) => {
     setCorrections(oldState => {
@@ -22,6 +24,11 @@ const FixInstrumentNames: FC<FixInstrumentNamesProps> = ({ instrumentNames, next
       return newCorrections;
     })
   }, []);
+
+  const handleNextClick = useCallback(() => {
+    setCorrectedInstruments(corrections.filter(x => x.updated.length));
+    setView('Instruments Order');
+  }, [setCorrectedInstruments, corrections, setView]);
 
   return (
     <ViewMain>
@@ -36,7 +43,7 @@ const FixInstrumentNames: FC<FixInstrumentNamesProps> = ({ instrumentNames, next
         <CorrectionRow key={ x } originalText={ x } updateValue={ (value: string) => updateInput(value, i) } editingAny={ editingAny } setEditingAny={ setEditingAny } />) }
       </Buttons>
       <Divider />
-      <Button $nextStyle $disabled={ editingAny } onClick={ () => next(corrections.filter(x => x.updated.length)) }>
+      <Button $nextStyle $disabled={ editingAny } onClick={ handleNextClick }>
         <h1>Next</h1>
       </Button>
     </ViewMain>

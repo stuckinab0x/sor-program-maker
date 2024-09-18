@@ -1,30 +1,28 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import View from '../models/view';
 import Button from '../styles/Button';
+import { useMaker } from '../contexts/maker-context';
 
-interface UnderNavProps {
-  view: View;
-  restart: () => void;
-  viewBack: () => void;
+const UnderNav: FC = () => {
+  const { view, restart, viewBack } = useMaker();
+
+  return (
+    <UnderNavMain>
+      <div>
+        { view !== 'Welcome' &&
+          <>
+            <Button onClick={ restart }>
+              <h2>Start Over</h2>
+            </Button>
+            <Button onClick={ viewBack } $notOrange>
+              <h2>Go Back</h2>
+            </Button>
+          </>
+        }
+      </div>
+    </UnderNavMain>
+  )
 }
-
-const UnderNav: FC<UnderNavProps> = ({ view, restart, viewBack }) => (
-  <UnderNavMain>
-    <div>
-      { view !== 'Welcome' &&
-        <>
-          <Button onClick={ restart }>
-            <h2>Start Over</h2>
-          </Button>
-          <Button onClick={ viewBack } $notOrange>
-            <h2>Go Back</h2>
-          </Button>
-        </>
-      }
-    </div>
-  </UnderNavMain>
-)
 
 const UnderNavMain = styled.div`
   display: flex;

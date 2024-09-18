@@ -4,23 +4,19 @@ import GridColumn from '../../models/grid-column';
 import RangeSelectColumn from '../RangeSelectColumn';
 import Button from '../../styles/Button';
 import mixins from '../../styles/mixins';
-import View from '../../models/view';
 import example from '../../images/picker-example.png';
 import Divider from '../../styles/Divider';
+import { useMaker } from '../../contexts/maker-context';
 
-interface ChooseRangeProps {
-  parsedSheet: GridColumn[];
-  selectedSheet: GridColumn[] | null;
-  setSelectedSheet: (grid: GridColumn[] | null) => void;
-  setView: (view: View) => void;
-}
 
 interface Cell {
   col: string;
   row: number;
 }
 
-const ChooseRange: FC<ChooseRangeProps> = ({ parsedSheet, selectedSheet, setSelectedSheet, setView }) =>  {
+const ChooseRange: FC = () =>  {
+  const { selectedSheet, setSelectedSheet, parsedSheet, setView } = useMaker();
+  
   const [currentCorner, setCurrentCorner] = useState<'left' | 'right' | null>(selectedSheet ? null : 'left');
   const [upperLeft, setUpperLeft] = useState<Cell | null>(null);
   const [lowerRight, setLowerRight] = useState<Cell | null>(null);
@@ -51,7 +47,7 @@ const ChooseRange: FC<ChooseRangeProps> = ({ parsedSheet, selectedSheet, setSele
   }, [setSelectedSheet]);
 
   useEffect(() => {
-    if (!upperLeft || !lowerRight)
+    if (!upperLeft || !lowerRight ||!parsedSheet)
       return;
 
     const indexOfFirstCol = parsedSheet.findIndex(x => x.col === upperLeft.col);
@@ -74,6 +70,7 @@ const ChooseRange: FC<ChooseRangeProps> = ({ parsedSheet, selectedSheet, setSele
     setLowerRight(null);
   }, [upperLeft, lowerRight, parsedSheet, handleReset, setSelectedSheet]);
 
+  if (parsedSheet)
   return (
     <ViewMain>
       <h1>Casting</h1>
@@ -107,7 +104,7 @@ const ChooseRange: FC<ChooseRangeProps> = ({ parsedSheet, selectedSheet, setSele
         { showError &&
           <Error>
             <h1>
-              Whoops, Invalid Selection Range
+              Invalid Selection Range
             </h1>
           </Error>
         }

@@ -1,24 +1,24 @@
 import { FC, useMemo, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import mixins from '../../styles/mixins';
-import Correction from '../../models/correction';
 import OrderCorrection from '../../models/order-correction';
 import DragTile from '../DragTile';
 import Button from '../../styles/Button';
 import Divider from '../../styles/Divider';
+import { useMaker } from '../../contexts/maker-context';
 
 interface InstrumentOrderProps {
   originalNames: string[];
-  instrumentNameCorrections: Correction[];
-  next: (correctedOrder: OrderCorrection[]) => void;
 }
 
-const InstrumentOrder: FC<InstrumentOrderProps> = ({ originalNames, instrumentNameCorrections, next }) => {
+const InstrumentOrder: FC<InstrumentOrderProps> = ({ originalNames }) => {
+  const { setOrderCorrections, setView, correctedInstruments } = useMaker();
+  
   const nameCorrectedOriginalOrder: OrderCorrection[] = useMemo(() =>
     originalNames.map((x, i) => {
-      const correction = instrumentNameCorrections.find(correction => correction.original === x);
+      const correction = correctedInstruments.find(correction => correction.original === x);
       return { name: correction?.updated || x, order: i }
-    }), [originalNames, instrumentNameCorrections]);
+    }), [originalNames, correctedInstruments]);
 
   const [order, setOrder] = useState<OrderCorrection[]>(nameCorrectedOriginalOrder);
   const [currentDragging, setCurrentDragging] = useState<OrderCorrection | null>(null);
@@ -40,6 +40,11 @@ const InstrumentOrder: FC<InstrumentOrderProps> = ({ originalNames, instrumentNa
     setHoverTopSlot(false)
   }, [currentDragging]);
 
+  const handleNextClick = useCallback(() => {
+    setOrderCorrections(order);
+    setView('Student Names');
+  }, [setOrderCorrections, order, setView]);
+
   return (
     <ViewMain>
       <h1>Instrument Order</h1>
@@ -55,11 +60,11 @@ const InstrumentOrder: FC<InstrumentOrderProps> = ({ originalNames, instrumentNa
           onDragLeave={ () => setHoverTopSlot(false) }
         />
         { order.map(x => 
-            <DragTile key={ x.name } currentDragging={ currentDragging } handleDrop={ handleDrop } setAsCurrent={ () => setCurrentDragging(x) } clearCurrent={ () => setCurrentDragging(null) } correctionInfo={ x } />
-          )}
+          <DragTile key={ x.name } currentDragging={ currentDragging } handleDrop={ handleDrop } setAsCurrent={ () => setCurrentDragging(x) } clearCurrent={ () => setCurrentDragging(null) } correctionInfo={ x } />
+        )}
       </Tiles>
       <Divider />
-      <Button $nextStyle onClick={ () => next(order) }>
+      <Button $nextStyle onClick={ handleNextClick }>
         <h1>Next</h1>
       </Button>
     </ViewMain>

@@ -8,16 +8,18 @@ import Divider from '../../styles/Divider';
 import students1 from '../../images/students1.png';
 import students2 from '../../images/students2.png';
 import students3 from '../../images/students3.png';
+import { useMaker } from '../../contexts/maker-context';
 
 interface FixStudentNamesProps {
   studentNames: string[];
-  next: (corrections: Correction[]) => void;
 }
 
-const FixStudentNames: FC<FixStudentNamesProps> = ({ studentNames, next }) => {
+const FixStudentNames: FC<FixStudentNamesProps> = ({ studentNames }) => {
   const [corrections, setCorrections] = useState<Correction[]>(studentNames.map(x => ({ original: x, updated: '' })));
   const [editingAny, setEditingAny] = useState(false);
   const [showExample, setShowExample] = useState(false);
+
+  const { setCorrectedStudentNames, setView } = useMaker();
 
   const updateInput = useCallback((value: string, index: number, remove?: boolean) => {
     setCorrections(oldState => {
@@ -27,7 +29,10 @@ const FixStudentNames: FC<FixStudentNamesProps> = ({ studentNames, next }) => {
     })
   }, []);
 
-  console.log(corrections);
+  const handleNextClick = useCallback(() => {
+    setCorrectedStudentNames(corrections.filter(x => x.updated.length || x.remove));
+    setView('Output');
+  }, [setCorrectedStudentNames, corrections, setView]);
 
   return (
     <ViewMain>
@@ -51,7 +56,7 @@ const FixStudentNames: FC<FixStudentNamesProps> = ({ studentNames, next }) => {
         <CorrectionRow key={ x } removeable originalText={ x } updateValue={ (value: string, remove?: boolean) => updateInput(value, i, remove) } editingAny={ editingAny } setEditingAny={ setEditingAny } />) }
       </Buttons>
       <Divider />
-      <Button $nextStyle $disabled={ editingAny } onClick={ () => next(corrections.filter(x => x.updated.length || x.remove)) }>
+      <Button $nextStyle $disabled={ editingAny } onClick={ handleNextClick }>
         <h1>Next</h1>
       </Button>
       { showExample &&

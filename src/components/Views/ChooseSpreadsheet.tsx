@@ -3,19 +3,18 @@ import styled, { css } from 'styled-components';
 import GridColumn from '../../models/grid-column';
 import * as XLSX from 'xlsx';
 import mixins from '../../styles/mixins';
+import { useMaker } from '../../contexts/maker-context';
 
-interface ChooseSpreadSheetProps {
-  setFileName: (name: string) => void;
-  setParsedSheet: (sheet: GridColumn[]) => void;
-  next: () => void;
- }
 
-const ChooseSpreadsheet: FC<ChooseSpreadSheetProps> = ({ setFileName, setParsedSheet, next }) => {
+
+const ChooseSpreadsheet: FC = () => {
   const [fileInput, setFileInput] = useState('');
   const [files, setFiles] = useState<FileList | null>();
   const [sheetOptions, setSheetOptions] = useState<string[]>([]);
   const [selectedSheet, setSelectedSheet] = useState('');
   const [error, setError] = useState(false);
+
+  const { setFileName, setParsedSheet, setView } = useMaker();
 
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setFileInput(event.target.value);
@@ -67,7 +66,7 @@ const ChooseSpreadsheet: FC<ChooseSpreadSheetProps> = ({ setFileName, setParsedS
 
         if (grid.length) {
           setParsedSheet(grid);
-          next();
+          setView('Choose Range');
         } else {
           setError(true)
         }
@@ -76,7 +75,7 @@ const ChooseSpreadsheet: FC<ChooseSpreadSheetProps> = ({ setFileName, setParsedS
       }
     }
     getBuffer();
-  }, [files, selectedSheet, setFileName, setParsedSheet, next]);
+  }, [files, selectedSheet, setFileName, setParsedSheet, setView]);
 
   return (
   <ViewMain $dim={ !!files && files.length !== 0 }>
@@ -92,7 +91,7 @@ const ChooseSpreadsheet: FC<ChooseSpreadSheetProps> = ({ setFileName, setParsedS
       <LoadIcons className='material-symbols-outlined'>done</LoadIcons>
       { !!files && files.length > 0 && sheetOptions.length > 0 && (<>
         <h1>
-          The file has more than one sheet.
+          The file has more than one sheet tab.
           <br />
           Which one do you want to use?
         </h1>
